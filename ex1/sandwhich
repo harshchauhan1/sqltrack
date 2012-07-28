@@ -1,0 +1,179 @@
+create table tastes (
+name varchar(25) not null,
+filling varchar(25) not null,
+primary key (name, filling));
+
+
+mysql> insert into tastes
+    -> values ('brown', 'turkey'),
+    -> ('brown', 'beef'),
+    -> ('brown', 'ham'),
+    -> ('jones', 'cheese'),
+    -> ('green', 'beef'),
+    -> ('green', 'turkey'),
+    -> ('green', 'cheese');
+Query OK, 7 rows affected (0.38 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from tastes;
++-------+---------+
+| name  | filling |
++-------+---------+
+| brown | beef    |
+| brown | ham     |
+| brown | turkey  |
+| green | beef    |
+| green | cheese  |
+| green | turkey  |
+| jones | cheese  |
++-------+---------+
+7 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+create table locations (
+lname varchar(25) not null,
+phone int,
+address varchar(25),
+primary key (lname));
+
+
+mysql> insert into locations
+    -> values ('lincoln', 6834523, 'lincoln place'),
+    -> ('o\'neill\'s', 6742134,'pearse st'),
+    -> ('old nag', 7678132, 'dame st'),
+    -> ('buttery', 7023421, 'college st');
+Query OK, 4 rows affected (0.35 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from locations;
++-----------+---------+---------------+
+| lname     | phone   | address       |
++-----------+---------+---------------+
+| buttery   | 7023421 | college st    |
+| lincoln   | 6834523 | lincoln place |
+| o'neill's | 6742134 | pearse st     |
+| old nag   | 7678132 | dame st       |
++-----------+---------+---------------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+create table sandwiches (
+location varchar(25) not null,
+bread varchar(25) not null,
+filling varchar(25) not null,
+price float,
+primary key (location, bread, filling));
+
+
+
+mysql> insert into sandwiches
+    -> values ('lincoln', 'rye', 'ham', 1.25),
+    -> ('o\'neill\'s', 'white', 'cheese', 1.20),
+    -> ('o\'neill\'s', 'whole', 'ham', 1.25),
+    -> ('old nag', 'rye', 'beef', 1.35),
+    -> ('buttery', 'white', 'cheese', 1.00),
+    -> ('o\'neill\'s', 'white', 'turkey', 1.35),
+    -> ('buttery', 'white', 'ham', 1.10),
+    -> ('lincoln', 'rye', 'beef', 1.35),
+    -> ('lincoln', 'white', 'ham', 1.30),
+    -> ('old nag', 'rye', 'ham', 1.40);
+Query OK, 10 rows affected (0.07 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from sandwiches;
++-----------+-------+---------+-------+
+| location  | bread | filling | price |
++-----------+-------+---------+-------+
+| buttery   | white | cheese  |     1 |
+| buttery   | white | ham     |   1.1 |
+| lincoln   | rye   | beef    |  1.35 |
+| lincoln   | rye   | ham     |  1.25 |
+| lincoln   | white | ham     |   1.3 |
+| o'neill's | white | cheese  |   1.2 |
+| o'neill's | white | turkey  |  1.35 |
+| o'neill's | whole | ham     |  1.25 |
+| old nag   | rye   | beef    |  1.35 |
+| old nag   | rye   | ham     |   1.4 |
++-----------+-------+---------+-------+
+10 rows in set (0.00 sec)
+
+
+
+
+
+
+
+QUERIES-------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+(i) mysql> select location
+    -> from san;
+ERROR 1146 (42S02): Table 'harsh.san' doesn't exist
+mysql> select distinct location
+    -> from sandwiches
+    -> where filling= any (select filling
+    -> from tastes
+    -> where name='jones');
++-----------+
+| location  |
++-----------+
+| buttery   |
+| o'neill's |
++-----------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+(ii)mysql> select distinct sandwiches.location
+    ->     from sandwiches, tastes
+    ->     where (tastes.name='jones') and (tastes.filling=sandwiches.filling);
++-----------+
+| location  |
++-----------+
+| buttery   |
+| o'neill's |
++-----------+
+2 rows in set (0.01 sec)
+
+
+
+
+
+
+
+(iii)mysql> select sandwiches.location,
+    ->      count(distinct tastes.name) as no_of_people
+    ->      from sandwiches, tastes
+    ->      where (sandwiches.filling=tastes.filling)
+    ->      group by sandwiches.location;
++-----------+--------------+
+| location  | no_of_people |
++-----------+--------------+
+| buttery   |            3 |
+| lincoln   |            2 |
+| o'neill's |            3 |
+| old nag   |            2 |
++-----------+--------------+
+4 rows in set (0.00 sec)
+

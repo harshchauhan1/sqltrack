@@ -1,0 +1,167 @@
+create table branch (
+bcode varchar(25),
+librarian varchar(25),
+address varchar(25),
+primary key (bcode));
+
+
+insert into branch
+values ('b1', 'john smith', '2 anglesea road'),
+('b2', 'mary jones', '34 pearse st'),
+('b3', 'francis owens', 'george x');
+
+
+
+mysql> select * from branch;
++-------+---------------+-----------------+
+| bcode | librarian     | address         |
++-------+---------------+-----------------+
+| b1    | john smith    | 2 anglesea road |
+| b2    | mary jones    | 34 pearse st    |
+| b3    | francis owens | george x        |
++-------+---------------+-----------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+create table title (
+title varchar(25) not null,
+author varchar(25),
+publisher varchar(25),
+primary key (title));
+
+
+insert into title
+values ('susannah', 'ann brown', 'macmillan'),
+('how to fish', 'amy fly', 'stop press'),
+('a history og dublin', 'david little', 'wiley'),
+('computer', 'blaise pascal', 'apllewoods'),
+('the wife', 'ann brown', 'macmillan');
+
+
+mysql> select * from title;
++---------------------+---------------+------------+
+| title               | author        | publisher  |
++---------------------+---------------+------------+
+| a history og dublin | david little  | wiley      |
+| computer            | blaise pascal | apllewoods |
+| how to fish         | amy fly       | stop press |
+| susannah            | ann brown     | macmillan  |
+| the wife            | ann brown     | macmillan  |
++---------------------+---------------+------------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+
+create table holdings (
+branch varchar(25) not null,
+title varchar(25) not null,
+copies int,
+primary key (branch, title));
+
+
+insert into holdings
+values ('b1', 'susannah', 3),
+('b1', 'how to', 2),
+('b1', 'a history og dublin', 1),
+('b2', 'how to fish', 4),
+('b2', 'computer', 2),
+('b2', 'the wife', 3),
+('b3', 'a history og dublin', 1),
+('b3', 'computer', 4),
+('b3', 'susannah', 3),
+('b3', 'the wife', 1);
+
+
+mysql> select * from holdings;
++--------+---------------------+--------+
+| branch | title               | copies |
++--------+---------------------+--------+
+| b1     | a history og dublin |      1 |
+| b1     | how to              |      2 |
+| b1     | susannah            |      3 |
+| b2     | computer            |      2 |
+| b2     | how to fish         |      4 |
+| b2     | the wife            |      3 |
+| b3     | a history og dublin |      1 |
+| b3     | computer            |      4 |
+| b3     | susannah            |      3 |
+| b3     | the wife            |      1 |
++--------+---------------------+--------+
+10 rows in set (0.00 sec)
+
+
+
+
+
+QUERIES---------------------------------------->
+
+
+
+
+(i) mysql> select title
+    -> from title
+    -> where publisher='macmillan';
++----------+
+| title    |
++----------+
+| susannah |
+| the wife |
++----------+
+2 rows in set (0.00 sec)
+
+
+
+
+(ii)mysql> select distinct branch
+    ->                  from holdings
+    ->                  where title= any(select title
+    ->                                   from title
+    ->                                   where author='ann brown');
++--------+
+| branch |
++--------+
+| b1     |
+| b2     |
+| b3     |
++--------+
+3 rows in set (0.00 sec)
+
+
+       
+
+
+(iii) mysql> select distinct holdings.branch
+    ->       from title, holdings
+    ->       where (title.author='ann brown') and (title.title=holdings.title);
++--------+
+| branch |
++--------+
+| b1     |
+| b3     |
+| b2     |
++--------+
+3 rows in set (0.00 sec)
+
+
+
+
+(iv)mysql> select branch,
+    ->      sum(copies) as no_of_books
+    ->      from holdings
+    ->       group by branch; 
++--------+-------------+
+| branch | no_of_books |
++--------+-------------+
+| b1     |           6 |
+| b2     |           9 |
+| b3     |           9 |
++--------+-------------+
+3 rows in set (0.00 sec)
+
