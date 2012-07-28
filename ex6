@@ -1,0 +1,304 @@
+create table employees (
+id int not null,
+name varchar(25),
+primary key (id));
+
+
+
+mysql> insert into employees
+    -> values (1, 'a'),
+    -> (2, 'b'),
+    -> (3, 'c'),
+    -> (4, 'd');
+Query OK, 5 rows affected (0.06 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from employees;
++----+------+
+| id | name |
++----+------+
+|  1 | a    |
+|  2 | b    |
+|  3 | c    |
+|  4 | d    |    |
++----+------+
+5 rows in set (0.00 sec)
+
+
+
+
+create table technologies (
+id int not null,
+name varchar(50)
+primary key (id));
+
+
+
+mysql> insert into technologies
+    -> values (1, 'html'),
+    -> (2, 'ios'),
+    -> (3, 'android'),
+    -> (4, 'ruby'),
+    -> (5, 'javascript'),
+    -> (6, 'rails');
+Query OK, 6 rows affected (0.06 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from technologies;
++----+------------+
+| id | name       |
++----+------------+
+|  1 | html       |
+|  2 | ios        |
+|  3 | android    |
+|  4 | ruby       |
+|  5 | javascript |
+|  6 | rails      |
++----+------------+
+6 rows in set (0.00 sec)
+
+
+
+create table projects (
+id char(2) not null,
+primary key (id)); 
+
+
+
+insert into projects
+values ('p1'),
+       ('p2'),
+       ('p3'),
+       ('p4'),
+       ('p5'),
+       ('p6'),
+       ('p7'),
+       ('p8'),
+       ('p9');
+mysql> select * from projects;
++----+
+| id |
++----+
+| p1 |
+| p2 |
+| p3 |
+| p4 |
+| p5 |
+| p6 |
+| p7 |
+| p8 |
+| p9 |
++----+
+9 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+create table employee_project (
+e_id int not null,
+p_id char(2) not null,
+status varchar(25),
+foreign key (e_id) references employees(id),
+foreign key (p_id) references projects(id));
+
+
+insert into employee_project 
+values (1, 'p1', 'previous'),
+(1, 'p2', 'previous'),
+(1, 'p3', 'previous'),
+(1, 'p6', 'current'),
+(2, 'p1', 'previous'),
+(2, 'p3', 'previous'),
+(2, 'p7', 'previous'),
+(2, 'p9', 'previous'),
+(3, 'p1', 'previous'),
+(3, 'p2', 'previous'),
+(3, 'p8', 'previous'),
+(3, 'p9', 'previous'),
+(4, 'p1', 'previous'),
+(4, 'p2', 'previous'),
+(4, 'p4', 'previous'),
+(4, 'p5', 'current'),
+(4, 'p6', 'curent');
+Query OK, 17 rows affected (0.07 sec)
+Records: 17  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_project;
++------+------+----------+
+| e_id | p_id | status   |
++------+------+----------+
+|    1 | p1   | previous |
+|    1 | p2   | previous |
+|    1 | p3   | previous |
+|    1 | p6   | current  |
+|    2 | p1   | previous |
+|    2 | p3   | previous |
+|    2 | p7   | previous |
+|    2 | p9   | previous |
+|    3 | p1   | previous |
+|    3 | p2   | previous |
+|    3 | p8   | previous |
+|    3 | p9   | previous |
+|    4 | p1   | previous |
+|    4 | p2   | previous |
+|    4 | p4   | previous |
+|    4 | p5   | current  |
+|    4 | p6   | current  |
++------+------+----------+
+17 rows in set (0.00 sec)
+
+
+
+
+
+
+
+create table technologies_project (
+p_id char(2),
+t_id int,
+foreign key (p_id) references projects(id),
+foreign key (t_id) references technologies(id));
+
+
+
+
+insert into technologies_project
+values ('p1', 1),
+('p1', 4),
+('p1', 5),
+('p1', 6),
+('p2', 2),
+('p3', 3),
+('p4', 3),
+('p4', 2),
+('p5', 4),
+('p5', 6),
+('p6', 1),
+('p6', 3),
+('p6', 5),
+('p7', 3),
+('p7', 2),
+('p8', 1),
+('p8', 3),
+('p8', 4),
+('p8', 5),
+('p8', 6),
+('p9', 2);
+
+mysql> select * from technologies_project;
++------+------+
+| p_id | t_id |
++------+------+
+| p1   |    1 |
+| p1   |    4 |
+| p1   |    5 |
+| p1   |    6 |
+| p2   |    2 |
+| p3   |    3 |
+| p4   |    3 |
+| p4   |    2 |
+| p5   |    4 |
+| p5   |    6 |
+| p6   |    1 |
+| p6   |    3 |
+| p6   |    5 |
+| p7   |    3 |
+| p7   |    2 |
+| p8   |    1 |
+| p8   |    3 |
+| p8   |    4 |
+| p8   |    5 |
+| p8   |    6 |
+| p9   |    2 |
++------+------+
+21 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+QUERIES------------------------------------------------------------------------------------------------>
+
+
+
+
+
+
+
+
+
+
+
+
+(i)mysql> select distinct name
+    ->    from employees left join (select distinct e_id
+    ->                              from employee_project
+    ->                              where status='current') as t3
+    ->   on t3.e_id=employees.id where t3.e_id is null;
++------+
+| name |
++------+
+| b    |
+| c    |
++------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+(ii)mysql> select employee_project.e_id from employee_project, technologies_project 
+where employee_project.p_id=technologies_project.p_id and t_id in (1, 2, 5) 
+group by e_id 
+having count(distinct technologies_project.t_id)=3;
++------+
+| e_id |
++------+
+|    1 |
+|    2 |
+|    3 |
+|    4 |
++------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+(iii)select t_id
+     from employee_project, technologies_project
+     where employee_project.p_id=technologies_project.p_id and e_id=4
+     group by t_id
+     having count(employee_project.p_id)>=3;
+
+
+
+
+
+
+
+
+(iv)mysql> select employee_project.e_id 
+           from employee_project, technologies_project
+           where employee_project.p_id=technologies_project.p_id and technologies_project.t_id=3 
+           group by e_id 
+           order by count(employee_project.p_id) desc limit 1;
++------+
+| e_id |
++------+
+|    2 |
++------+
+1 row in set (0.01 sec)
+
+
