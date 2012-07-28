@@ -1,0 +1,12 @@
+mysql> create database vtapp;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use vtapp;
+Database changed
+mysql> create user 'vtapp_user';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant all privileges on *.* to 'vtapp_user'
+    -> with grant option;
+Query OK, 0 rows affected (0.00 sec)
+
