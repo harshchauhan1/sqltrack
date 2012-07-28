@@ -1,0 +1,225 @@
+create table categories (
+c_id int not null,
+category varchar (25),
+primary key (c_id));
+
+
+insert into categories
+     values (1, 'romance'),
+     (2, 'thriller'),
+     (3, 'suspense'),
+     (4, 'comedy');
+Query OK, 4 rows affected (0.07 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from categories;
++------+----------+
+| c_id | category |
++------+----------+
+|    1 | romance  |
+|    2 | thriller |
+|    3 | suspense |
+|    4 | comedy   |
++------+----------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+create table articles (
+a_id int not null,
+u_id int not null,
+name varchar(25),
+category varchar(25),
+primary key (a_id));
+
+ insert into articles
+    values (1, 1, 'abc', 'romance'),
+    (2, 1, 'xyz', 'thriller'),
+    (3, 2, 'def', 'suspense'),
+    (4, 3, 'wxy', 'suspense'),
+    (5, 4, 'fgh', 'comedy');
+Query OK, 5 rows affected (0.06 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from articles;
++------+------+------+----------+
+| a_id | u_id | name | category |
++------+------+------+----------+
+|    1 |    1 | abc  | romance  |
+|    2 |    1 | xyz  | thriller |
+|    3 |    2 | def  | suspense |
+|    4 |    3 | wxy  | suspense |
+|    5 |    4 | fgh  | comedy   |
++------+------+------+----------+
+5 rows in set (0.00 sec)
+
+
+
+
+create table users (
+u_id int not null,
+username varchar(25),
+primary key (u_id));
+
+
+ insert into users
+    values (1, 'harsh'),
+    (2, 'akshay'),
+    (3, 'kuldeep'),
+     (4, 'nishant');
+Query OK, 4 rows affected (0.06 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from users;
++------+----------+
+| u_id | username |
++------+----------+
+|    1 | harsh    |
+|    2 | akshay   |
+|    3 | kuldeep  |
+|    4 | nishant  |
++------+----------+
+4 rows in set (0.00 sec)
+
+
+
+
+create table comments (
+comm_id int not null,
+a_id int not null,
+u_id int not null,
+comment varchar(50),
+primary key (comm_id));
+
+
+
+insert into comments
+    values (1, 1, 1, 'comment1'),
+    (2, 1, 2, 'comment2'),
+    (3, 2, 2, 'comment3'),
+    (4, 3, 3, 'comment4'),
+    (5, 3, 4, 'comment5'),
+    (6, 4, 3, 'comment6'),
+    (7, 5, 1, 'comment7'),
+       (8, 1, 1, 'comment8');
+Query OK, 7 rows affected (0.06 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from comments;
++---------+------+------+----------+
+| comm_id | a_id | u_id | comment  |
++---------+------+------+----------+
+|       1 |    1 |    1 | comment1 |
+|       2 |    1 |    2 | comment2 |
+|       3 |    2 |    2 | comment3 |
+|       4 |    3 |    3 | comment4 |
+|       5 |    3 |    4 | comment5 |
+|       6 |    4 |    3 | comment6 |
+|       7 |    5 |    1 | comment7 |
++---------+------+------+----------+
+7 rows in set (0.00 sec)
+
+
+
+
+
+
+QUERIES---------------------------------------------->>
+
+
+
+
+
+
+
+(i)mysql> select distinct articles.a_id, articles.name
+    ->    from articles, users
+    ->    where (articles.u_id=users.u_id) and (articles.u_id=3);
++------+------+
+| a_id | name |
++------+------+
+|    4 | wxy  |
++------+------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+(ii)mysql> select articles.a_id, comments.u_id, comments.comment
+    ->   from articles, comments, users
+    ->   where (articles.u_id=users.u_id) and (articles.u_id=3) and (articles.a_id=comments.a_id);
++------+------+----------+
+| a_id | u_id | comment  |
++------+------+----------+
+|    4 |    3 | comment6 |
++------+------+----------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+(iii)mysql> select articles.a_id, articles.name
+    ->      from articles left join comments
+    ->      on articles.a_id=comments.a_id
+    ->      where comments.a_id is null;
++------+------+
+| a_id | name |
++------+------+
+|    4 | wxy  |
++------+------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+(iv)mysql> select a_id, count(a_id) as no_of_comments 
+    from comments 
+    group by a_id 
+    order by no_of_comments desc limit 1;
++------+----------------+
+| a_id | no_of_comments |
++------+----------------+
+|    1 |              2 |
++------+----------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+(v)mysql> select articles.a_id
+    -> from articles 
+    -> left join (select a_id 
+    -> from comments 
+    -> group by a_id 
+    -> having (count(u_id)-count(distinct u_id))>0) as t2
+    -> on articles.a_id=t2.a_id
+    -> where t2.a_id is null;
++------+
+| a_id |
++------+
+|    2 |
+|    3 |
+|    4 |
+|    5 |
++------+
+4 rows in set (0.00 sec)
+
+
