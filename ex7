@@ -1,0 +1,126 @@
+create table orders (
+orderNumber int not null,
+orderDate date,
+requiredDate date,
+shippedDate date,
+status varchar(15),
+comment varchar(50),
+customerNumber int,
+primary key (orderNumber));
+
+
+
+insert into orders
+values (1, '2012-10-01', '2012-10-10', '2012-10-08', 'dispatched', 'comment1', 1),
+(2, '2012-10-01', '2012-10-10', '2012-10-08', 'dispatched', 'comment2', 2),
+(3, '2012-10-05', '2012-10-10', '2012-10-07', 'dispatched', 'comment3', 3),
+(4, '2012-10-06', '2012-10-11', '2012-10-06', 'dispatched', 'comment4', 4),
+(5, '2012-10-09', '2012-10-14', '2012-10-11', 'dispatched', 'comment5', 41;
+
+mysql> select * from orders;
++-------------+------------+--------------+-------------+------------+----------+----------------+
+| orderNumber | orderDate  | requiredDate | shippedDate | status     | comment  | customerNumber |
++-------------+------------+--------------+-------------+------------+----------+----------------+
+|           1 | 2012-10-01 | 2012-10-10   | 2012-10-08  | dispatched | comment1 |              1 |
+|           2 | 2012-10-01 | 2012-10-10   | 2012-10-08  | dispatched | comment2 |              2 |
+|           3 | 2012-10-05 | 2012-10-10   | 2012-10-07  | dispatched | comment3 |              3 |
+|           4 | 2012-10-06 | 2012-10-11   | 2012-10-06  | dispatched | comment4 |              4 |
+|           5 | 2012-10-09 | 2012-10-14   | 2012-10-11  | dispatched | comment5 |              1 |
++-------------+------------+--------------+-------------+------------+----------+----------------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+create table orderdetails (
+orderNumber int,
+quantityOrdered int,
+requiredDate date,
+priceEach float,
+orderLineNumber int,
+foreign key (orderNumber) references orders(orderNumber));
+
+
+insert into orderdetails
+values (1, 1, '2012-10-10', 50, 1),
+(2, 2, '2012-10-10', 100, 2),
+(3, 3, '2012-10-10', 500, 3),
+(4, 4, '2012-10-11', 40, 4),
+(5, 601, '2012-10-10', 50, 5);
+
+mysql> select * from orderdetails;
++-------------+-----------------+--------------+-----------+-----------------+
+| orderNumber | quantityOrdered | requiredDate | priceEach | orderLineNumber |
++-------------+-----------------+--------------+-----------+-----------------+
+|           1 |               1 | 2012-10-10   |        50 |               1 |
+|           2 |               2 | 2012-10-10   |       100 |               2 |
+|           3 |               3 | 2012-10-10   |       500 |               3 |
+|           4 |               4 | 2012-10-11   |        40 |               4 |
+|           5 |             601 | 2012-10-10   |        50 |               5 |
++-------------+-----------------+--------------+-----------+-----------------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+
+QUERIES------------------------------------------------------------------------------------------------>
+
+
+
+
+
+
+(i)mysql> select distinct a.orderNumber, b.quantityOrdered, (b.quantityOrdered*b.priceEach) as total_value
+    ->    from orders a, orderdetails b
+    ->    where a.orderNumber=b.orderNumber;
++-------------+-----------------+-------------+
+| orderNumber | quantityOrdered | total_value |
++-------------+-----------------+-------------+
+|           1 |               1 |          50 |
+|           2 |               2 |         200 |
+|           3 |               3 |        1500 |
+|           4 |               4 |         160 |
+|           5 |             601 |       30050 |
++-------------+-----------------+-------------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+(ii)mysql> select distinct a.orderNumber
+    ->     from orders a, orderdetails b
+    ->     where a.orderNumber=b.orderNumber and (b.quantityOrdered*b.priceEach)>1000;
++-------------+
+| orderNumber |
++-------------+
+|           3 |
+|           5 |
++-------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+(iii)  mysql> select orderNumber
+    ->        from orderdetails
+    ->        where (quantityOrdered*priceEach>1000) and quantityOrdered>600;
++-------------+
+| orderNumber |
++-------------+
+|           5 |
++-------------+
+1 row in set (0.00 sec)
+
