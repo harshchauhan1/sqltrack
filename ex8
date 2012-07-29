@@ -2,7 +2,7 @@
 
 Q1: What do different columns in the output of EXPLAIN mean? What possible values can those have? What is the meaning of those values?
 
-Ans: The Explain command is being used by a database designer so that he can better visualise and analyse the database whcih would help in the designing of the queries. The designer can better visualise how teh query processing works and it is also useful in the analysis of the slow queries.
+Ans: The Explain command is being used by a database designer so that he can better visualise and analyse the database whcih would help in the designing of the queries. The designer can better visualise how the query processing works and it is also useful in the analysis of the slow queries.
 
 An Explain command is followed by a Select command and therefore when you fire this query, the following parameters are returned.
 
@@ -75,7 +75,7 @@ mysql> SELECT count(id) FROM comments;
 
 2.1 The value under 'rows' column in the output of EXPLAIN query and SELECT query after it are same. What does it mean?
 
-Ans: The rows which are shown in teh explain command is the estimate value of teh rows which the query optimizer or parser would think are needed to process the query. It is just an estimate and it may or may be correct all the time. This number has been derived from the table stats and index selection.
+Ans: The rows which are shown in the explain command is the estimate value of the rows which the query optimizer or parser would think are needed to process the query. It is just an estimate and it may or may not be correct all the time. This number has been derived from the table stats and index selection.
 
 The count(id) command would start from the beginning to the end counting the rows.
 
