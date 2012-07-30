@@ -1,0 +1,23 @@
+create table chateusers (
+id int not null,
+name varchar(25),
+primary key (id));
+
+
+
+
+
+create table message (
+id int not null,
+flag int,
+primary key (id));
+
+
+create table conversation (
+sender_id int,
+reciever_id int,
+m_id int,
+message varchar (50),
+foreign key (sender_id) references chatusers(id),
+foreign key (reciever_id) references chatusers(id),
+foreign key (m_id) references message(id));
