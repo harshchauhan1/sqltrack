@@ -1,0 +1,38 @@
+mysql> desc testing_table;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| name         | varchar(25) | YES  |     | NULL    |       |
+| contact_name | varchar(25) | YES  |     | NULL    |       |
+| roll_no      | varchar(25) | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> alter table testing_table drop column name;
+
+
+
+
+
+mysql> alter table testing_table change contact_name name varchar(25);
+
+
+
+
+
+
+mysql> alter table testing_table modify roll_no integer;
+
+
+
+
+
+
+mysql> alter table testing_table
+    -> add column first_name varchar(25),
+    -> add column last_name varchar(25);
+
+
