@@ -134,10 +134,9 @@ QUERIES---------------------------------------------->>
 
 
 
-
-(i)mysql> select distinct articles.a_id, articles.name
-    ->    from articles, users
-    ->    where (articles.u_id=users.u_id) and (articles.u_id=3);
+(i)mysql> select a_id, name
+       from articles
+       where u_id=3;
 +------+------+
 | a_id | name |
 +------+------+
@@ -151,8 +150,8 @@ QUERIES---------------------------------------------->>
 
 
 (ii)mysql> select articles.a_id, comments.u_id, comments.comment
-    ->   from articles, comments, users
-    ->   where (articles.u_id=users.u_id) and (articles.u_id=3) and (articles.a_id=comments.a_id);
+       from articles, comments
+       where (articles.a_id=comments.a_id) and (articles.u_id=3);
 +------+------+----------+
 | a_id | u_id | comment  |
 +------+------+----------+
@@ -183,16 +182,10 @@ QUERIES---------------------------------------------->>
 
 
 
-(iv)mysql> select a_id, count(a_id) as no_of_comments 
-    from comments 
+(iv)select a_id from 
+    comments 
     group by a_id 
-    order by no_of_comments desc limit 1;
-+------+----------------+
-| a_id | no_of_comments |
-+------+----------------+
-|    1 |              2 |
-+------+----------------+
-1 row in set (0.00 sec)
+    having count(a_id)= (select count(a_id) as no from comments group by a_id order by no desc limit 1);
 
 
 
@@ -205,13 +198,13 @@ QUERIES---------------------------------------------->>
 
 
 (v)mysql> select articles.a_id
-    -> from articles 
-    -> left join (select a_id 
-    -> from comments 
-    -> group by a_id 
-    -> having (count(u_id)-count(distinct u_id))>0) as t2
-    -> on articles.a_id=t2.a_id
-    -> where t2.a_id is null;
+     from articles 
+     left join (select a_id 
+     from comments 
+     group by a_id 
+     having (count(u_id)-count(distinct u_id))>0) as t2
+     on articles.a_id=t2.a_id
+     where t2.a_id is null;
 +------+
 | a_id |
 +------+
@@ -221,5 +214,6 @@ QUERIES---------------------------------------------->>
 |    5 |
 +------+
 4 rows in set (0.00 sec)
+
 
 

@@ -183,11 +183,11 @@ where (images.image_user=friends.friend) and (user_id=1);
 
 
 
-(iii)mysql> select i.image_user 
+(iii)mysql> select i.image_user , i.id
 from images i inner join tags 
 on tags.image_id=i.id and tags.tagged=1 
 group by image_user 
-having count(*) in (select count(*) from images t where t.image_user=i.image_user);
+having count(*) = (select count(*) from images t where t.image_user=i.image_user);
 +------------+
 | image_user |
 +------------+
@@ -204,15 +204,5 @@ having count(*) in (select count(*) from images t where t.image_user=i.image_use
 
 
 
-(iv) mysql> select friends.friend 
-	from friends, images, tags  
-	where friends.friend=images.image_user and friends.user_id=1 and images.id=tags.image_id and tags.tagged=1 
-	group by friends.friend      
-	order by (count(*)) desc limit 1;
-+--------+
-| friend |
-+--------+
-|      3 |
-+--------+
-1 row in set (0.00 sec)
+(iv)select image_user from images, tags where image_id=id and tagged=2 group by image_user having count(*)=(select count(*) from images where id= any(select image_id from tags where tagged=2) group by image_user order by count(*) desc limit 1);
 
