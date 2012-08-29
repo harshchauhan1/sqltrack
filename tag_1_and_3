@@ -1,0 +1,4 @@
+select post_id from tags 
+where tag_id in (1,3)
+group by post_id 
+having count(distinct tag_id)=2;
