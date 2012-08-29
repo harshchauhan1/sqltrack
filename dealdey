@@ -1,0 +1,21 @@
+List of member who have ever bought something on Dealdey, their signup date, their first purchase category, First purchase price, Total number of purchases till date, Total money spent with the site till date
+
+Total number of users who have signed up by their referral.
+
+
+
+
+
+(i)select user_id,deals.category_id,(quantity*unit_price)+shipping_charges,count(*), sum((quantity*unit_price)+shipping_charges)
+   from deals_users,deals 
+   where deals_users.deal_id=deals.id 
+   group by user_id ;
+
+
+
+
+
+
+
+
+(ii)select count(*) from users where referrer_id is not null;
