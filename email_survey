@@ -1,0 +1,24 @@
+
+
+
+(i) select distinct city from data;
+
+
+
+
+
+(ii) select city,count(*) from data group by city;
+
+
+
+
+(iii) select city from data group by city having  count(*)=(select count(*) from data group by city order by count(*) desc limit 1);
+
+
+
+
+(iv) select distinct substring(email_id,8,50) as domain from data;
+
+
+
+(v) select substring(email_id,9,50) as domain from data group by domain having count(*)=(select count(substring(email_id,9,50)) from data group by substring(email_id,9,50) order by count(*) desc limit 1);
